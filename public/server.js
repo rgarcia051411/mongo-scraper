@@ -68,6 +68,23 @@ app.post('/comments', (req, res) => {
 
 	});
 });
+
+app.get('/comments',(req,res) => {
+	Comment.find().then((comments) => {
+		res.send({comments});
+	}, (error) => {
+		res.status(400).send(error);
+	});
+});
+
+app.delete('/comments/:id', (req, res,) => {
+	db.collections(comments).findOndeAndDelete ({comments}).then((result) =>{
+		console.log(result);
+	}, (error) => {
+		res.status(400).send(error);
+	})
+
+});
  
 
 
