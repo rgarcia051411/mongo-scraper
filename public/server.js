@@ -18,7 +18,7 @@ var PORT = 3000;
 // Database Configuration
 var databaseUrl = "scraper";
 var collections = ["scrapedData"];
-var url = "";
+var url = "http://www.awwwards.com/websites/clean/";
 
 // Hooking mongojs to the database variable
 var db = mongojs(databaseUrl, collections);
@@ -48,6 +48,18 @@ app.get('/all', (req, res, html) => {
 app.get('/scrape', (req, res) => {
     request(url, (err, res, html) => {
         var $ = cheerio.load(html);
+        var results = [];
+
+        $("figure.rollover").each((i, element) => {
+
+        	var imgLink = $(element).find("a").find("img").attr("srcset").split(",")[0].split(" ")[0];
+
+        		results.push({link:imgLink});
+        });
+        	console.log(results)
+
+
+
 
 
     });
@@ -55,36 +67,36 @@ app.get('/scrape', (req, res) => {
 
 });
 
-app.post('/comments', (req, res) => {
-	var comment = new Comment ({
-		title: req.body.title,
-		comment:req.body.comment
-	});
+// app.post('/comments', (req, res) => {
+// 	var comment = new Comment ({
+// 		title: req.body.title,
+// 		comment:req.body.comment
+// 	});
 
-	comment.save().then((doc) => {  
-		res.send(doc)
-	}, (error) => {
-		res.status(400).send(error);
+// 	comment.save().then((doc) => {  
+// 		res.send(doc)
+// 	}, (error) => {
+// 		res.status(400).send(error);
 
-	});
-});
+// 	});
+// });
 
-app.get('/comments',(req,res) => {
-	Comment.find().then((comments) => {
-		res.send({comments});
-	}, (error) => {
-		res.status(400).send(error);
-	});
-});
+// app.get('/comments',(req,res) => {
+// 	Comment.find().then((comments) => {
+// 		res.send({comments});
+// 	}, (error) => {
+// 		res.status(400).send(error);
+// 	});
+// });
 
-app.delete('/comments/:id', (req, res,) => {
-	db.collections(comments).findOndeAndDelete ({comments}).then((result) =>{
-		console.log(result);
-	}, (error) => {
-		res.status(400).send(error);
-	})
+// app.delete('/comments/:id', (req, res,) => {
+// 	db.collections(comments).findOndeAndDelete ({comments}).then((result) =>{
+// 		console.log(result);
+// 	}, (error) => {
+// 		res.status(400).send(error);
+// 	})
 
-});
+// });
  
 
 
